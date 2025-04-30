@@ -64,15 +64,17 @@ impl<const BUFFER_SIZE: usize> CircularBuffer<BUFFER_SIZE> {
     }
 
     pub fn read_exact(&mut self, data: &mut [u8]) -> Result<(), Base64Error> {
-        if self.read(data) != data.len() {
-            return Err(Base64Error::BufferUnderflow);
+        let read_len = self.read(data);
+        if read_len != data.len() {
+            return Err(Base64Error::BufferUnderflow(read_len));
         }
         Ok(())
     }
 
     pub fn write_exact(&mut self, data: &[u8]) -> Result<(), Base64Error> {
-        if self.write(data) != data.len() {
-            return Err(Base64Error::BufferUnderflow);
+        let write_len = self.write(data);
+        if write_len != data.len() {
+            return Err(Base64Error::BufferUnderflow(write_len));
         }
         Ok(())
     }
